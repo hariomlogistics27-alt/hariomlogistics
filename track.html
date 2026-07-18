@@ -31,7 +31,7 @@ const db = getFirestore(app);
 
 const params = new URLSearchParams(window.location.search);
 const tracking = params.get("tracking");
-
+alert(tracking);
 try {
 
 const snap = await getDoc(doc(db,"Shipments",tracking));
