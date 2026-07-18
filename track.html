@@ -35,6 +35,7 @@ alert(tracking);
 try {
 
 const snap = await getDoc(doc(db,"Shipments",tracking));
+alert(snap.exists());
 
 if(snap.exists()){
 
