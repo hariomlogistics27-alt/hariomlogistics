@@ -2,7 +2,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Tracking Details</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shipment Tracking</title>
 </head>
 
 <body>
@@ -17,12 +18,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCW5vn_-Ql2r6N0DTl3t19EQRT3HLLCFxw",
-  authDomain: "hari-om-logistics.firebaseapp.com",
-  projectId: "hari-om-logistics",
-  storageBucket: "hari-om-logistics.firebasestorage.app",
-  messagingSenderId: "941223687085",
-  appId: "1:941223687085:web:18bde39639e965d9372724"
+apiKey: "AIzaSyCW5vn_-Ql2r6N0DTl3t19EQRT3HLLCFxw",
+authDomain: "hari-om-logistics.firebaseapp.com",
+projectId: "hari-om-logistics",
+storageBucket: "hari-om-logistics.firebasestorage.app",
+messagingSenderId: "941223687085",
+appId: "1:941223687085:web:18bde39639e965d9372724"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -31,23 +32,47 @@ const db = getFirestore(app);
 const params = new URLSearchParams(window.location.search);
 const tracking = params.get("tracking");
 
-const docRef = doc(db, "Shipments", tracking);
-const snap = await getDoc(docRef);
+try {
+
+const snap = await getDoc(doc(db,"Shipments",tracking));
 
 if(snap.exists()){
-    const d = snap.data();
 
-    document.getElementById("result").innerHTML = `
-        <b>Tracking ID:</b> ${tracking}<br><br>
-        <b>Status:</b> ${d.status}<br><br>
-        <b>Sender:</b> ${d.sender}<br><br>
-        <b>Receiver:</b> ${d.receiver}<br><br>
-        <b>Origin:</b> ${d.origin}<br><br>
-        <b>Destination:</b> ${d.destination}<br><br>
-        <b>Current Location:</b> ${d.currentLocation}
-    `;
+const d = snap.data();
+
+document.getElementById("result").innerHTML = `
+<h2>Shipment Details</h2>
+
+<b>Tracking ID:</b> ${tracking}<br><br>
+
+<b>Status:</b> ${d.status}<br><br>
+
+<b>Sender:</b> ${d.sender}<br><br>
+
+<b>Receiver:</b> ${d.receiver}<br><br>
+
+<b>Origin:</b> ${d.origin}<br><br>
+
+<b>Destination:</b> ${d.destination}<br><br>
+
+<b>Current Location:</b> ${d.currentLocation}<br><br>
+
+<b>Booking Date:</b> ${d.bookingDate}<br><br>
+
+<b>Payment Status:</b> ${d.PaymentStatus}
+
+`;
+
 }else{
-    document.getElementById("result").innerHTML="Tracking ID Not Found";
+
+document.getElementById("result").innerHTML="<h3>Document Not Found</h3>";
+
+}
+
+}catch(e){
+
+document.getElementById("result").innerHTML="<h3>Firebase Error</h3><br>"+e.message;
+
 }
 
 </script>
