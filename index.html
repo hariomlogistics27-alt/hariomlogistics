@@ -69,26 +69,29 @@ color:red;
 font-weight:bold;
 }
 </style>
+
+</head>
+
 <body>
 
 <div class="header">
-  Hari Om Logistics
+Hari Om Logistics
 </div>
 
 <div class="container">
 
-  <h2>Track Your Shipment</h2>
+<h2>Track Your Shipment</h2>
 
-  <input
-    type="text"
-    id="tracking"
-    placeholder="Enter Tracking ID">
+<input
+type="text"
+id="tracking"
+placeholder="Enter Tracking ID">
 
-  <button onclick="trackShipment()">
-    Track Shipment
-  </button>
+<button onclick="trackShipment()">
+Track Shipment
+</button>
 
-  <div id="msg"></div>
+<div id="msg"></div>
 
 </div>
 
@@ -96,25 +99,14 @@ font-weight:bold;
 
 function trackShipment(){
 
-var id=document.getElementById("tracking").value.trim().toUpperCase();
+let id=document.getElementById("tracking").value.trim().toUpperCase();
 
-var tracking={
-
-"HOL-105812497719":"https://hariomlogistics2753.blogspot.com/2026/07/mr-nilesh.html",
-
-"HOL-10581247921":"https://hariomlogistics2753.blogspot.com/2026/07/mr-ashish.html"
-
-};
-
-if(tracking[id]){
-
-window.location.href=tracking[id];
-
-}else{
-
-document.getElementById("msg").innerHTML="❌ Invalid Tracking ID";
-
+if(id==""){
+document.getElementById("msg").innerHTML="Please Enter Tracking ID";
+return;
 }
+
+window.location.href="track.html?tracking="+encodeURIComponent(id);
 
 }
 
