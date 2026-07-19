@@ -1,3 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shipment Tracking</title>
+</head>
+
+<body>
+
+<h2>Shipment Tracking</h2>
+
+<div id="result">Loading...</div>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -15,50 +29,53 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-alert(firebaseConfig.projectId);
-
 const params = new URLSearchParams(window.location.search);
 const tracking = params.get("tracking");
 
-alert(tracking);
+if (!tracking) {
+  document.getElementById("result").innerHTML = "<h3>No Tracking ID Found</h3>";
+} else {
 
-try {
+  try {
 
-  const ref = doc(db, "Shipments", tracking);
-  alert(ref.path);
+    const ref = doc(db, "Shipments", tracking);
+    const snap = await getDoc(ref);
 
-  const snap = await getDoc(ref);
-  alert(snap.exists());
+    if (snap.exists()) {
 
-  if (snap.exists()) {
+      const d = snap.data();
 
-    const d = snap.data();
+      document.getElementById("result").innerHTML = `
+        <h2>Shipment Details</h2>
 
-    document.getElementById("result").innerHTML = `
-      <h2>Shipment Details</h2>
+        <p><b>Tracking ID:</b> ${tracking}</p>
+        <p><b>Status:</b> ${d.status}</p>
+        <p><b>Sender:</b> ${d.sender}</p>
+        <p><b>Receiver:</b> ${d.receiver}</p>
+        <p><b>Origin:</b> ${d.origin}</p>
+        <p><b>Destination:</b> ${d.destination}</p>
+        <p><b>Current Location:</b> ${d.currentLocation}</p>
+        <p><b>Booking Date:</b> ${d.bookingDate}</p>
+        <p><b>Payment Status:</b> ${d.PaymentStatus}</p>
+      `;
 
-      <b>Tracking ID:</b> ${tracking}<br><br>
-      <b>Status:</b> ${d.status}<br><br>
-      <b>Sender:</b> ${d.sender}<br><br>
-      <b>Receiver:</b> ${d.receiver}<br><br>
-      <b>Origin:</b> ${d.origin}<br><br>
-      <b>Destination:</b> ${d.destination}<br><br>
-      <b>Current Location:</b> ${d.currentLocation}<br><br>
-      <b>Booking Date:</b> ${d.bookingDate}<br><br>
-      <b>Payment Status:</b> ${d.PaymentStatus}
-    `;
+    } else {
 
-  } else {
+      document.getElementById("result").innerHTML =
+      "<h3>Tracking ID Not Found</h3>";
 
-    document.getElementById("result").innerHTML = "<h3>Document Not Found</h3>";
+    }
+
+  } catch (e) {
+
+    document.getElementById("result").innerHTML =
+    "<h3>Firebase Error</h3><p>" + e.message + "</p>";
 
   }
-
-} catch (e) {
-
-  document.getElementById("result").innerHTML =
-    "<h3>Firebase Error</h3><br>" + e.message;
 
 }
 
 </script>
+
+</body>
+</html>
