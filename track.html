@@ -36,7 +36,14 @@ try {
 
 const snap = await getDoc(doc(db,"Shipments",tracking));
 alert(snap.exists());
+const ref = doc(db,"Shipments",tracking);
+alert(ref.path);
 
+const ref = doc(db,"Shipments",tracking);
+alert(ref.path);
+
+const snap = await getDoc(ref);
+alert(snap.exists());
 if(snap.exists()){
 
 const d = snap.data();
