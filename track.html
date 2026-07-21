@@ -15,7 +15,13 @@
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCW5vn_-Ql2r6N0DTl3t19EQRT3HLLCFxw",
@@ -35,12 +41,24 @@ const params = new URLSearchParams(window.location.search);
 const tracking = params.get("tracking");
 
 if (!tracking) {
+
   document.getElementById("result").innerHTML =
-  "<h3>No Tracking ID Found</h3>";
+    "<h3>No Tracking ID Found</h3>";
+
 } else {
 
   try {
 
+    // Read all documents
+    const qs = await getDocs(collection(db, "Shipments"));
+
+    alert("Documents = " + qs.size);
+
+    qs.forEach((d) => {
+      alert("Document ID = " + d.id);
+    });
+
+    // Read selected document
     const ref = doc(db, "Shipments", tracking);
 
     alert("Tracking = " + tracking);
@@ -50,9 +68,9 @@ if (!tracking) {
 
     alert("Exists = " + snap.exists());
 
-    if (snap.exists()) {
+    alert("Data = " + JSON.stringify(snap.data()));
 
-      alert(JSON.stringify(snap.data()));
+    if (snap.exists()) {
 
       const d = snap.data();
 
@@ -60,14 +78,14 @@ if (!tracking) {
         <h2>Shipment Details</h2>
 
         <p><b>Tracking ID:</b> ${tracking}</p>
-        <p><b>Status:</b> ${d.status}</p>
-        <p><b>Sender:</b> ${d.sender}</p>
-        <p><b>Receiver:</b> ${d.receiver}</p>
-        <p><b>Origin:</b> ${d.origin}</p>
-        <p><b>Destination:</b> ${d.destination}</p>
-        <p><b>Current Location:</b> ${d.currentLocation}</p>
-        <p><b>Booking Date:</b> ${d.bookingDate}</p>
-        <p><b>Payment Status:</b> ${d.PaymentStatus}</p>
+        <p><b>Status:</b> ${d.status ?? ""}</p>
+        <p><b>Sender:</b> ${d.sender ?? ""}</p>
+        <p><b>Receiver:</b> ${d.receiver ?? ""}</p>
+        <p><b>Origin:</b> ${d.origin ?? ""}</p>
+        <p><b>Destination:</b> ${d.destination ?? ""}</p>
+        <p><b>Current Location:</b> ${d.currentLocation ?? ""}</p>
+        <p><b>Booking Date:</b> ${d.bookingDate ?? ""}</p>
+        <p><b>Payment Status:</b> ${d.PaymentStatus ?? ""}</p>
       `;
 
     } else {
@@ -82,7 +100,7 @@ if (!tracking) {
 
   } catch (e) {
 
-    alert("Firebase Error: " + e.message);
+    alert("Firebase Error = " + e.message);
 
     document.getElementById("result").innerHTML = `
       <h3>Firebase Error</h3>
