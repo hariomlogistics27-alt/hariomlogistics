@@ -21,7 +21,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCW5vn_-Ql2r6N0DTl3t19EQRT3HLLCFxw",
   authDomain: "hari-om-logistics.firebaseapp.com",
   projectId: "hari-om-logistics",
-  storageBucket: "hari-om-logistics.firebasestorage.app",
+  storageBucket: "hari-om-logistics.appspot.com",
   messagingSenderId: "941223687085",
   appId: "1:941223687085:web:18bde39639e965d9372724"
 };
@@ -38,12 +38,16 @@ if (!tracking) {
 
   try {
 
+    console.log("Tracking:", tracking);
+
     const ref = doc(db, "Shipments", tracking);
+
+    console.log("Document Path:", ref.path);
+
     const snap = await getDoc(ref);
 
-    alert("Tracking = " + tracking);
-    alert("Path = " + ref.path);
-    alert("Exists = " + snap.exists());
+    console.log("Exists:", snap.exists());
+    console.log("Data:", snap.data());
 
     if (snap.exists()) {
 
@@ -65,15 +69,22 @@ if (!tracking) {
 
     } else {
 
-      document.getElementById("result").innerHTML =
-      "<h3>Tracking ID Not Found</h3>";
+      document.getElementById("result").innerHTML = `
+        <h3>Tracking ID Not Found</h3>
+        <p>Tracking: ${tracking}</p>
+        <p>Path: ${ref.path}</p>
+      `;
 
     }
 
   } catch (e) {
 
-    document.getElementById("result").innerHTML =
-    "<h3>Firebase Error</h3><p>" + e.message + "</p>";
+    console.error(e);
+
+    document.getElementById("result").innerHTML = `
+      <h3>Firebase Error</h3>
+      <p>${e.message}</p>
+    `;
 
   }
 
