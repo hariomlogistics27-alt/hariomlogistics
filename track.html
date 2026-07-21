@@ -40,7 +40,9 @@ if (!tracking) {
 
     const ref = doc(db, "Shipments", tracking);
     const snap = await getDoc(ref);
-
+alert("Tracking = " + tracking);
+alert("Path = " + ref.path);
+alert("Exists = " + snap.exists());
     if (snap.exists()) {
 
       const d = snap.data();
