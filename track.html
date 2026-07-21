@@ -26,6 +26,8 @@ const firebaseConfig = {
   appId: "1:941223687085:web:18bde39639e965d9372724"
 };
 
+alert("Project ID = " + firebaseConfig.projectId);
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
@@ -33,23 +35,24 @@ const params = new URLSearchParams(window.location.search);
 const tracking = params.get("tracking");
 
 if (!tracking) {
-  document.getElementById("result").innerHTML = "<h3>No Tracking ID Found</h3>";
+  document.getElementById("result").innerHTML =
+  "<h3>No Tracking ID Found</h3>";
 } else {
 
   try {
 
-    console.log("Tracking:", tracking);
-
     const ref = doc(db, "Shipments", tracking);
 
-    console.log("Document Path:", ref.path);
+    alert("Tracking = " + tracking);
+    alert("Path = " + ref.path);
 
     const snap = await getDoc(ref);
 
-    console.log("Exists:", snap.exists());
-    console.log("Data:", snap.data());
+    alert("Exists = " + snap.exists());
 
     if (snap.exists()) {
+
+      alert(JSON.stringify(snap.data()));
 
       const d = snap.data();
 
@@ -71,15 +74,15 @@ if (!tracking) {
 
       document.getElementById("result").innerHTML = `
         <h3>Tracking ID Not Found</h3>
-        <p>Tracking: ${tracking}</p>
-        <p>Path: ${ref.path}</p>
+        <p><b>Tracking:</b> ${tracking}</p>
+        <p><b>Path:</b> ${ref.path}</p>
       `;
 
     }
 
   } catch (e) {
 
-    console.error(e);
+    alert("Firebase Error: " + e.message);
 
     document.getElementById("result").innerHTML = `
       <h3>Firebase Error</h3>
