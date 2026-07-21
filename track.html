@@ -19,7 +19,7 @@ import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10
 
 const firebaseConfig = {
   apiKey: "AIzaSyCW5vn_-Ql2r6N0DTl3t19EQRT3HLLCFxw",
-  authDomain: storageBucket: "hari-om-logistics.appspot.com",
+  authDomain: "hari-om-logistics.firebaseapp.com",
   projectId: "hari-om-logistics",
   storageBucket: "hari-om-logistics.firebasestorage.app",
   messagingSenderId: "941223687085",
@@ -40,9 +40,11 @@ if (!tracking) {
 
     const ref = doc(db, "Shipments", tracking);
     const snap = await getDoc(ref);
-alert("Tracking = " + tracking);
-alert("Path = " + ref.path);
-alert("Exists = " + snap.exists());
+
+    alert("Tracking = " + tracking);
+    alert("Path = " + ref.path);
+    alert("Exists = " + snap.exists());
+
     if (snap.exists()) {
 
       const d = snap.data();
